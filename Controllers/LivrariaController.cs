@@ -40,7 +40,7 @@ public class LivrariaController : ControllerBase
         };
 
     [HttpGet]
-    [ProducesResponseType(typeof(Livro), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<Livro>), StatusCodes.Status200OK)]
     public IActionResult GetAll()
     {
         return Ok(livros);
@@ -55,7 +55,7 @@ public class LivrariaController : ControllerBase
             return BadRequest();
         }
 
-        int Id = livros.Count + 1; 
+        int Id = livros.Count + 1;
 
         Livro response = new Livro
         {
@@ -67,10 +67,29 @@ public class LivrariaController : ControllerBase
             Qntd = request.Qntd
         };
 
-
-
         livros.Add(response);
 
         return Created(string.Empty, response);
+    }
+
+    [HttpPut]
+    [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public IActionResult Update([FromBody] RequestUpdateBook request, [FromRoute] int id)
+    {
+        if (!ModelState.IsValid) {
+            return BadRequest();
+        }
+        return NoContent();
+    }
+
+    [HttpDelete]
+    [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public IActionResult Delete([FromRoute] int id) {
+        if (!ModelState.IsValid) {
+            return BadRequest();
+        }
+        return NoContent();
     }
 }
