@@ -77,18 +77,45 @@ public class LivrariaController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public IActionResult Update([FromBody] RequestUpdateBook request, [FromRoute] int id)
     {
-        if (!ModelState.IsValid) {
+
+        if (!ModelState.IsValid)
+        {
             return BadRequest();
         }
+
+
+        Livro livroEmEdicao = new Livro
+        {
+            Id = id,
+            Titulo = request.Titulo,
+            Autor = request.Autor,
+            Genero = request.Genero,
+            Preco = request.Preco,
+            Qntd = request.Qntd
+        };
+
+        int index = livros.FindIndex(livro => livro.Id == id);
+        livros[index] = livroEmEdicao;
         return NoContent();
     }
 
     [HttpDelete]
     [Route("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public IActionResult Delete([FromRoute] int id) {
-        if (!ModelState.IsValid) {
+    public IActionResult Delete([FromRoute] int id)
+    {
+        if (!ModelState.IsValid)
+        {
             return BadRequest();
+        }
+        Livro? livro = livros.Find(livro => livro.Id == id);
+        if (livro is not null)
+        {
+            livros.Remove(livro);
+        }
+        else
+        {
+            return BadRequest("Não foi possível excluir livro.");
         }
         return NoContent();
     }
